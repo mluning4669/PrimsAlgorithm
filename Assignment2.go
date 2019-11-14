@@ -31,4 +31,11 @@ func main() {
 	}
 
 	fmt.Println()
+	heap.ExtractMin()
+
+	for i := 1; i < heap.Capacity-1; i++ {
+		fmt.Print(*heap.Arr[i].Weight, " ")
+	}
+
+	fmt.Println()
 }

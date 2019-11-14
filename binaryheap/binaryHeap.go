@@ -21,12 +21,22 @@ func StartHeap(n int) *Heap {
 	return &h
 }
 
+//ExtractMin removes minimum element of heap
+func (h *Heap) ExtractMin() *graphs.Node {
+	min := *h.Arr[1]
+	*h.Arr[1] = *h.Arr[h.size]
+	h.Arr[h.size] = nil
+	h.heapifyDown(1)
+	h.size--
+	return &min
+}
+
 //Insert insert an element into the heap
 func (h *Heap) Insert(elem *graphs.Node) {
-	//check against capacity here
+	//TODO: check against capacity here
 	h.size++
 	h.Arr[h.size] = elem  //insert element at element size
-	h.dict[elem] = h.size //store element and size in position dictionary              //bump size by 1
+	h.dict[elem] = h.size //store element and size in position dictionary
 	h.heapifyUp(h.size)   //put heap in heap order
 }
 
@@ -34,10 +44,10 @@ func (h *Heap) heapifyUp(i int) {
 	if i > 1 {
 		j := i / 2 //this works thanks to integer division
 
-		if *h.Arr[j].Weight > *h.Arr[i].Weight { //will also need to swap dicitonary elements
-			temp := *h.Arr[j]
-			*h.Arr[j] = *h.Arr[i]
-			*h.Arr[i] = temp
+		if *h.Arr[j].Weight > *h.Arr[i].Weight { //TODO: will also need to swap dicitonary elements
+			temp := h.Arr[j]
+			h.Arr[j] = h.Arr[i]
+			h.Arr[i] = temp
 
 			h.heapifyUp(j)
 		}
@@ -45,31 +55,22 @@ func (h *Heap) heapifyUp(i int) {
 }
 
 func (h *Heap) heapifyDown(i int) {
-	n := h.size
-	var j = 0
+	var j = i
 
-	if 2*i > n {
-		return
+	left := 2 * i
+	right := 2*i + 1
+
+	if left < h.size && *h.Arr[j].Weight > *h.Arr[left].Weight { //TODO: not sure about this
+		j = left
 	}
-	if 2*i < n {
-		left := 2 * i
-		right := 2*i + 1
-
-		if *h.Arr[left].Weight <= *h.Arr[right].Weight { //not sure about this
-			j = left
-		} else {
-			j = right
-		}
-
-	}
-	if 2*i == n {
-		j = i
+	if right < h.size && *h.Arr[j].Weight > *h.Arr[right].Weight {
+		j = right
 	}
 
-	if *h.Arr[j].Weight < *h.Arr[i].Weight { //will need to update dictionary
-		temp := *h.Arr[j]
-		*h.Arr[j] = *h.Arr[i]
-		*h.Arr[i] = temp
+	if j != i { //TODO: will need to update dictionary
+		temp := h.Arr[j]
+		h.Arr[j] = h.Arr[i]
+		h.Arr[i] = temp
 
 		h.heapifyDown(j)
 	}
