@@ -1,14 +1,14 @@
 package main
 
 import (
-	"Algorithms/Assignment_2/Golang/binaryheap"
-	"Algorithms/Assignment_2/Golang/graphs"
+	"PrimsAlgorithm/binaryheap"
+	"PrimsAlgorithm/graphs"
 	"fmt"
 )
 
 func main() {
 	fmt.Println("Prim's Algorithm")
-	graph := graphs.ReadFile("Prim_000.gl")
+	graph := graphs.ReadFile("test.gl")
 
 	graphs.PrintGraph(graph)
 
@@ -23,8 +23,11 @@ func main() {
 		heap.Insert(v.Head)
 	}
 
-	for _, v := range heap.Arr {
-		fmt.Print(*v.Weight, " ")
+	for i, v := range heap.Arr {
+		if i > 0 {
+			fmt.Print(*v.Weight, " ")
+		}
+
 	}
 
 	fmt.Println()

@@ -1,20 +1,21 @@
 package binaryheap
 
 import (
-	"Algorithms/Assignment_2/Golang/graphs"
+	"PrimsAlgorithm/graphs"
 )
 
 //Heap a heap for implmenting a priority queue
 type Heap struct {
-	Arr  []*graphs.Node
-	size int
-	dict map[*graphs.Node]int //position in the text
+	Arr      []*graphs.Node
+	size     int
+	Capacity int
+	dict     map[*graphs.Node]int //position in the text
 }
 
 //StartHeap Initializes a heap of size N
 func StartHeap(n int) *Heap {
-	h := Heap{size: 0}
-	h.Arr = make([]*graphs.Node, n)
+	h := Heap{size: 0, Capacity: n + 1} //using 1 based indexing to make the math more managable
+	h.Arr = make([]*graphs.Node, n+1)
 	h.dict = make(map[*graphs.Node]int)
 
 	return &h
@@ -22,26 +23,19 @@ func StartHeap(n int) *Heap {
 
 //Insert insert an element into the heap
 func (h *Heap) Insert(elem *graphs.Node) {
-	h.Arr[h.size] = elem    //insert element at index size since size is the length of the array before adding the new element
-	h.dict[elem] = h.size   //store element and size in position dictionary
-	h.size++                //bump size by 1
-	h.heapifyUp(h.size - 1) //put heap in heap order
-}
-
-func (h *Heap) parent(i int) int {
-	if i%2 == 0 {
-		return i / 2
-	}
-
-	return (i - 2) / 2
+	//check against capacity here
+	h.size++
+	h.Arr[h.size] = elem  //insert element at element size
+	h.dict[elem] = h.size //store element and size in position dictionary              //bump size by 1
+	h.heapifyUp(h.size)   //put heap in heap order
 }
 
 func (h *Heap) heapifyUp(i int) {
 	if i > 1 {
-		j := h.parent(i)
+		j := i / 2 //this works thanks to integer division
 
-		if *h.Arr[j].Weight < *h.Arr[i].Weight {
-			var temp = *h.Arr[j]
+		if *h.Arr[j].Weight > *h.Arr[i].Weight { //will also need to swap dicitonary elements
+			temp := *h.Arr[j]
 			*h.Arr[j] = *h.Arr[i]
 			*h.Arr[i] = temp
 
@@ -72,8 +66,8 @@ func (h *Heap) heapifyDown(i int) {
 		j = i
 	}
 
-	if *h.Arr[j].Weight < *h.Arr[i].Weight {
-		var temp = *h.Arr[j]
+	if *h.Arr[j].Weight < *h.Arr[i].Weight { //will need to update dictionary
+		temp := *h.Arr[j]
 		*h.Arr[j] = *h.Arr[i]
 		*h.Arr[i] = temp
 
