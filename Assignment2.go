@@ -12,15 +12,18 @@ func main() {
 
 	graphs.PrintGraph(graph)
 
-	for _, v := range graph.AdjList {
-		fmt.Print(*v.Head.Weight, " ")
-	}
-	fmt.Println()
+	testVals := []float64{1.0, 5.0, 6.0, 9.0, 11.0, 8.0, 15.0, 17.0, 21.0}
 
-	heap := binaryheap.StartHeap(len(graph.AdjList))
+	testHeap(testVals)
+}
 
-	for _, v := range graph.AdjList {
-		heap.Insert(v.Head)
+func testHeap(testVals []float64) {
+	heap := binaryheap.StartHeap(len(testVals))
+
+	values := [9]float64{1.0, 5.0, 6.0, 9.0, 11.0, 8.0, 15.0, 17.0, 21.0}
+
+	for i := range values {
+		heap.Insert(&graphs.Node{Val: 0, Weight: &values[i]})
 	}
 
 	for i, v := range heap.Arr {
@@ -31,7 +34,7 @@ func main() {
 	}
 
 	fmt.Println()
-	heap.ExtractMin()
+	heap.Delete(2)
 
 	for i := 1; i < heap.Capacity-1; i++ {
 		fmt.Print(*heap.Arr[i].Weight, " ")
