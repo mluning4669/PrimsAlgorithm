@@ -35,7 +35,7 @@ func (h *Heap) ExtractMin() *graphs.Node {
 func (h *Heap) Delete(i int) {
 	h.Arr[i] = h.Arr[h.size]
 	h.Arr[h.size] = nil
-	h.heapifyDown(1)
+	h.heapifyDown(i)
 	h.size--
 }
 
