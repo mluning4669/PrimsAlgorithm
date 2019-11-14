@@ -23,12 +23,20 @@ func StartHeap(n int) *Heap {
 
 //ExtractMin removes minimum element of heap
 func (h *Heap) ExtractMin() *graphs.Node {
-	min := *h.Arr[1]
-	*h.Arr[1] = *h.Arr[h.size]
+	min := h.Arr[1]
+	h.Arr[1] = h.Arr[h.size]
 	h.Arr[h.size] = nil
 	h.heapifyDown(1)
 	h.size--
-	return &min
+	return min
+}
+
+//Delete removes element at location i in heap array
+func (h *Heap) Delete(i int) {
+	h.Arr[i] = h.Arr[h.size]
+	h.Arr[h.size] = nil
+	h.heapifyDown(1)
+	h.size--
 }
 
 //Insert insert an element into the heap
@@ -38,6 +46,11 @@ func (h *Heap) Insert(elem *graphs.Node) {
 	h.Arr[h.size] = elem  //insert element at element size
 	h.dict[elem] = h.size //store element and size in position dictionary
 	h.heapifyUp(h.size)   //put heap in heap order
+}
+
+//FindMin finds minimum element in heap but doesn't remove it
+func (h *Heap) FindMin() *graphs.Node {
+	return h.Arr[1]
 }
 
 func (h *Heap) heapifyUp(i int) {
