@@ -8,14 +8,14 @@ import (
 //Heap a heap for implmenting a priority queue
 type Heap struct {
 	Arr      []*graphs.Node
-	size     int
+	Size     int
 	Capacity int
 	dict     map[*graphs.Node]int //position in the text
 }
 
-//StartHeap Initializes a heap of size N
+//StartHeap Initializes a heap of Size N
 func StartHeap(n int) *Heap {
-	h := Heap{size: 0, Capacity: n + 1} //using 1 based indexing to make the math more managable
+	h := Heap{Size: 0, Capacity: n + 1} //using 1 based indexing to make the math more managable
 	h.Arr = make([]*graphs.Node, n+1)
 	h.dict = make(map[*graphs.Node]int)
 
@@ -25,31 +25,31 @@ func StartHeap(n int) *Heap {
 //ExtractMin removes minimum element of heap
 func (h *Heap) ExtractMin() *graphs.Node {
 	min := h.Arr[1]
-	h.Arr[1] = h.Arr[h.size]
-	h.Arr[h.size] = nil
+	h.Arr[1] = h.Arr[h.Size]
+	h.Arr[h.Size] = nil
 	h.heapifyDown(1)
-	h.size--
+	h.Size--
 	return min
 }
 
 //Delete removes element at location i in heap array. Also acts as Delete(elem) when you pass Delete(dict[elem])
 func (h *Heap) Delete(i int) {
-	h.Arr[i] = h.Arr[h.size]
-	h.Arr[h.size] = nil
+	h.Arr[i] = h.Arr[h.Size]
+	h.Arr[h.Size] = nil
 	h.heapifyDown(i)
-	h.size--
+	h.Size--
 }
 
 //Insert insert an element into the heap
 func (h *Heap) Insert(elem *graphs.Node) error {
-	if h.size+1 >= h.Capacity {
+	if h.Size+1 >= h.Capacity {
 		return errors.New("Heap at capacity")
 	}
 
-	h.size++
-	h.Arr[h.size] = elem  //insert element at element size
-	h.dict[elem] = h.size //store element and size in position dictionary
-	h.heapifyUp(h.size)   //put heap in heap order
+	h.Size++
+	h.Arr[h.Size] = elem  //insert element at element Size
+	h.dict[elem] = h.Size //store element and Size in position dictionary
+	h.heapifyUp(h.Size)   //put heap in heap order
 
 	return nil
 }
@@ -61,7 +61,13 @@ func (h *Heap) FindMin() *graphs.Node {
 
 //ChangeKey change the key (in this case Node) of the current element to a new value
 func (h *Heap) ChangeKey(current *graphs.Node, newKey *graphs.Node) {
+	currentIndex := h.dict[current]
+	h.Arr[currentIndex] = newKey //Assign new key to current index
 
+	delete(h.dict, current)       //clear out old value in postion map
+	h.dict[newKey] = currentIndex //add new value with old index to map
+
+	h.heapifyDown(currentIndex)
 }
 
 func (h *Heap) swap(i int, j int) {
@@ -91,10 +97,10 @@ func (h *Heap) heapifyDown(i int) {
 	left := 2 * i
 	right := 2*i + 1
 
-	if left < h.size && *h.Arr[j].Weight > *h.Arr[left].Weight {
+	if left < h.Size && *h.Arr[j].Weight > *h.Arr[left].Weight {
 		j = left
 	}
-	if right < h.size && *h.Arr[j].Weight > *h.Arr[right].Weight {
+	if right < h.Size && *h.Arr[j].Weight > *h.Arr[right].Weight {
 		j = right
 	}
 

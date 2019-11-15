@@ -34,9 +34,10 @@ func testHeap(testVals []float64) {
 	}
 
 	fmt.Println()
-	heap.Delete(2)
+	newWeight := 16.0
+	heap.ChangeKey(heap.Arr[2], &graphs.Node{Val: 0, Weight: &newWeight})
 
-	for i := 1; i < heap.Capacity-1; i++ {
+	for i := 1; i <= heap.Size; i++ {
 		fmt.Print(*heap.Arr[i].Weight, " ")
 	}
 
