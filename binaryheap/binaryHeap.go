@@ -59,38 +59,9 @@ func (h *Heap) FindMin() *graphs.Node {
 	return h.Arr[1]
 }
 
-//ChangeKey change the index of current by inserting an deleting as needed
-func (h *Heap) ChangeKey(current *graphs.Node, newKey int) error {
-	key, prs := h.dict[current]
-	if !prs {
-		return errors.New("Item not found")
-	}
+//ChangeKey change the key (in this case Node) of the current element to a new value
+func (h *Heap) ChangeKey(current *graphs.Node, newKey *graphs.Node) {
 
-	if newKey > h.Capacity {
-		return errors.New("Key excedes heap capacity")
-	}
-
-	if newKey > h.size+1 {
-		return errors.New("Changing key would violate heap shape (key > size + 1)")
-	}
-
-	//if newKey is at the end of the heap array then simply insert current and then delete
-	if newKey == h.size+1 {
-		h.Insert(current)
-		h.Delete(key)
-		return nil
-	}
-
-	if h.Arr[newKey] != nil {
-		//swap old element at newKey with current
-		h.swap(key, newKey)
-		//heapify up at newKey
-		h.heapifyUp(newKey)
-		//delete old element
-		h.Delete(key)
-	}
-
-	return nil
 }
 
 func (h *Heap) swap(i int, j int) {
