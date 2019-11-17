@@ -28,6 +28,7 @@ func NewGraph(directed bool, weighted bool) *Graph {
 type Node struct {
 	Val    int
 	Weight *float64
+	AttCost *float64
 	parent *Node
 	prev   *Node
 	next   *Node
