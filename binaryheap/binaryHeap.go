@@ -59,14 +59,10 @@ func (h *Heap) FindMin() *graphs.Node {
 	return h.Arr[1]
 }
 
-//ChangeKey change the key (in this case Node) of the current element to a new value
-func (h *Heap) ChangeKey(current *graphs.Node, newKey *graphs.Node) {
+//ChangeKey change the key (in this case attachment cost) of the current element to a new value
+func (h *Heap) ChangeKey(current *graphs.Node, newKey float64) {
 	currentIndex := h.dict[current]
-	h.Arr[currentIndex] = newKey //Assign new key to current index
-
-	delete(h.dict, current)       //clear out old value in postion map
-	h.dict[newKey] = currentIndex //add new value with old index to map
-
+	h.Arr[currentIndex].AttCost = &newKey
 	h.heapifyDown(currentIndex)
 }
 
