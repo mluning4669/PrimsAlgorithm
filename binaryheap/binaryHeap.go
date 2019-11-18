@@ -63,6 +63,7 @@ func (h *Heap) FindMin() *graphs.Node {
 func (h *Heap) ChangeKey(currentLabel string, newKey float64) {
 	currentIndex := h.Dict[currentLabel]
 	h.Arr[currentIndex].AttCost = newKey
+	h.heapifyUp(currentIndex)
 	h.heapifyDown(currentIndex)
 }
 
