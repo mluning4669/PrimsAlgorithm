@@ -41,19 +41,19 @@ func prim(graph *graphs.Graph) {
 			break
 		}
 		var min = heap.ExtractMin()
-		mst[graph.Idict[min.Val]] = true
-		fmt.Print(graph.Idict[min.Val], ": ")
+		mst[graph.Idict[min.Val-1]] = true
+		fmt.Print(graph.Idict[min.Val-1], ": ")
 
 		v.Current = v.Head
 
 		for v.Current != nil {
-			index := heap.Dict[graph.Idict[v.Current.Val]]
-			e := mst[graph.Idict[v.Current.Val]] //don't want to change the attachment costs of nodes already in the MST
+			index := heap.Dict[graph.Idict[v.Current.Val+1]]
+			e := mst[graph.Idict[v.Current.Val+1]] //don't want to change the attachment costs of nodes already in the MST
 
 			if *v.Current.Weight < heap.Arr[index].AttCost && !e {
-				heap.ChangeKey(graph.Idict[v.Current.Val], *v.Current.Weight)
+				heap.ChangeKey(graph.Idict[v.Current.Val+1], *v.Current.Weight)
 				v.Parent = min
-				fmt.Print(" ", graph.Idict[v.Current.Val])
+				fmt.Print(" ", graph.Idict[v.Current.Val+1])
 			}
 
 			v.Current = v.Current.Next
