@@ -3,7 +3,6 @@ package binaryheap
 import (
 	"PrimsAlgorithm/graphs"
 	"errors"
-	"fmt"
 )
 
 //Heap a heap for implmenting a priority queue
@@ -11,14 +10,14 @@ type Heap struct {
 	Arr      []*graphs.Node
 	Size     int
 	Capacity int
-	Dict     map[*graphs.Node]int //position in the text
+	Dict     map[string]int //position in the text
 }
 
 //StartHeap Initializes a heap of Size N
 func StartHeap(n int) *Heap {
 	h := Heap{Size: 0, Capacity: n + 1} //using 1 based indexing to make the math more managable
 	h.Arr = make([]*graphs.Node, n+1)
-	h.Dict = make(map[*graphs.Node]int)
+	h.Dict = make(map[string]int)
 
 	return &h
 }
@@ -48,9 +47,9 @@ func (h *Heap) Insert(elem *graphs.Node) error {
 	}
 
 	h.Size++
-	h.Arr[h.Size] = elem  //insert element at element Size
-	h.Dict[elem] = h.Size //store element and Size in position dictionary
-	h.heapifyUp(h.Size)   //put heap in heap order
+	h.Arr[h.Size] = elem            //insert element at element Size
+	h.Dict[elem.HeapLabel] = h.Size //store element and Size in position dictionary
+	h.heapifyUp(h.Size)             //put heap in heap order
 
 	return nil
 }
@@ -62,19 +61,14 @@ func (h *Heap) FindMin() *graphs.Node {
 
 //ChangeKey change the key (in this case attachment cost) of the current element to a new value
 func (h *Heap) ChangeKey(current *graphs.Node, newKey float64) {
-	currentIndex := h.Dict[current]
-	fmt.Println("h.Dict: ", h.Dict)
-	fmt.Println("&current: ", &current)
-	fmt.Println("currentIndex: ", currentIndex)
-	fmt.Println("&h.Arr[currentIndex]: ", &h.Arr[currentIndex])
+	currentIndex := h.Dict[current.HeapLabel]
 	h.Arr[currentIndex].AttCost = newKey
-	fmt.Println("Hello from Binaryheap")
 	h.heapifyDown(currentIndex)
 }
 
 func (h *Heap) swap(i int, j int) {
-	h.Dict[h.Arr[i]] = j //update dictionary
-	h.Dict[h.Arr[j]] = i
+	h.Dict[h.Arr[i].HeapLabel] = j //update dictionary
+	h.Dict[h.Arr[j].HeapLabel] = i
 
 	temp := h.Arr[j]
 	h.Arr[j] = h.Arr[i]
