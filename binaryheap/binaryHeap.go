@@ -3,6 +3,7 @@ package binaryheap
 import (
 	"PrimsAlgorithm/graphs"
 	"errors"
+	"fmt"
 )
 
 //Heap a heap for implmenting a priority queue
@@ -10,14 +11,14 @@ type Heap struct {
 	Arr      []*graphs.Node
 	Size     int
 	Capacity int
-	dict     map[*graphs.Node]int //position in the text
+	Dict     map[*graphs.Node]int //position in the text
 }
 
 //StartHeap Initializes a heap of Size N
 func StartHeap(n int) *Heap {
 	h := Heap{Size: 0, Capacity: n + 1} //using 1 based indexing to make the math more managable
 	h.Arr = make([]*graphs.Node, n+1)
-	h.dict = make(map[*graphs.Node]int)
+	h.Dict = make(map[*graphs.Node]int)
 
 	return &h
 }
@@ -48,7 +49,7 @@ func (h *Heap) Insert(elem *graphs.Node) error {
 
 	h.Size++
 	h.Arr[h.Size] = elem  //insert element at element Size
-	h.dict[elem] = h.Size //store element and Size in position dictionary
+	h.Dict[elem] = h.Size //store element and Size in position dictionary
 	h.heapifyUp(h.Size)   //put heap in heap order
 
 	return nil
@@ -61,14 +62,19 @@ func (h *Heap) FindMin() *graphs.Node {
 
 //ChangeKey change the key (in this case attachment cost) of the current element to a new value
 func (h *Heap) ChangeKey(current *graphs.Node, newKey float64) {
-	currentIndex := h.dict[current]
-	h.Arr[currentIndex].AttCost = &newKey
+	currentIndex := h.Dict[current]
+	fmt.Println("h.Dict: ", h.Dict)
+	fmt.Println("&current: ", &current)
+	fmt.Println("currentIndex: ", currentIndex)
+	fmt.Println("&h.Arr[currentIndex]: ", &h.Arr[currentIndex])
+	h.Arr[currentIndex].AttCost = newKey
+	fmt.Println("Hello from Binaryheap")
 	h.heapifyDown(currentIndex)
 }
 
 func (h *Heap) swap(i int, j int) {
-	h.dict[h.Arr[i]] = j //update dictionary
-	h.dict[h.Arr[j]] = i
+	h.Dict[h.Arr[i]] = j //update dictionary
+	h.Dict[h.Arr[j]] = i
 
 	temp := h.Arr[j]
 	h.Arr[j] = h.Arr[i]
@@ -79,7 +85,7 @@ func (h *Heap) heapifyUp(i int) {
 	if i > 1 {
 		j := i / 2 //this works thanks to integer division
 
-		if *h.Arr[j].Weight > *h.Arr[i].Weight {
+		if h.Arr[j].AttCost > h.Arr[i].AttCost {
 			h.swap(i, j)
 
 			h.heapifyUp(j)
@@ -93,10 +99,10 @@ func (h *Heap) heapifyDown(i int) {
 	left := 2 * i
 	right := 2*i + 1
 
-	if left < h.Size && *h.Arr[j].Weight > *h.Arr[left].Weight {
+	if left < h.Size && h.Arr[j].AttCost > h.Arr[left].AttCost {
 		j = left
 	}
-	if right < h.Size && *h.Arr[j].Weight > *h.Arr[right].Weight {
+	if right < h.Size && h.Arr[j].AttCost > h.Arr[right].AttCost {
 		j = right
 	}
 
