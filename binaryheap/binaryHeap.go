@@ -60,8 +60,8 @@ func (h *Heap) FindMin() *graphs.Node {
 }
 
 //ChangeKey change the key (in this case attachment cost) of the current element to a new value
-func (h *Heap) ChangeKey(current *graphs.Node, newKey float64) {
-	currentIndex := h.Dict[current.HeapLabel]
+func (h *Heap) ChangeKey(currentLabel string, newKey float64) {
+	currentIndex := h.Dict[currentLabel]
 	h.Arr[currentIndex].AttCost = newKey
 	h.heapifyDown(currentIndex)
 }

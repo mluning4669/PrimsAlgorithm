@@ -28,12 +28,13 @@ func NewGraph(directed bool, weighted bool) *Graph {
 
 //Node node in homebrew doubly linked list
 type Node struct {
-	Val     int
-	Weight  *float64
-	AttCost float64
-	Label   string
-	Prev    *Node
-	Next    *Node
+	Val       int
+	HeapLabel string
+	Weight    *float64
+	AttCost   float64
+	Label     string
+	Prev      *Node
+	Next      *Node
 }
 
 //List tail, current and head of doubly linked list. An array of Lists will serve as the adjacency list. Use a map[string]int to map the vertices to the array
