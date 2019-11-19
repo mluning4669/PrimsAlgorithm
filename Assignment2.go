@@ -9,7 +9,7 @@ import (
 
 func main() {
 	fmt.Println("Prim's Algorithm")
-	graph := graphs.ReadFile("Prim_001.gl")
+	graph := graphs.ReadFile("Prim_000.gl")
 
 	graphs.PrintGraph(graph)
 
@@ -21,7 +21,7 @@ func main() {
 
 func prim(graph *graphs.Graph) {
 	heap := binaryheap.StartHeap(graph.VertCount)
-	mst := make(map[string]bool)
+	mstGraph := *graphs.NewGraph(false, true)
 
 	//populate heap with nodes from graph
 	for i := range graph.AdjList {
@@ -37,7 +37,7 @@ func prim(graph *graphs.Graph) {
 	}
 
 	var min = heap.ExtractMin()
-	mst[min.HeapLabel] = true
+	mstGraph.InsertVertex(min.HeapLabel)
 
 	for heap.Size > 0 {
 		var v = graph.AdjList[graph.Dict[min.HeapLabel]]
@@ -46,31 +46,27 @@ func prim(graph *graphs.Graph) {
 
 		for v.Current != nil { //
 			index := heap.Dict[graph.Idict[v.Current.Val]]
-			e := mst[graph.Idict[v.Current.Val]] //don't want to change the attachment costs of nodes already in the MST
+			_, e := mstGraph.Idict[v.Current.Val] //don't want to change the attachment costs of nodes already in the MST
 
 			if *v.Current.Weight < heap.Arr[index].AttCost && !e {
-				heap.ChangeKey(graph.Idict[v.Current.Val], *v.Current.Weight)
-				graph.AdjList[v.Current.Val].Parent = min
+				heap.ChangeKey(graph.Idict[v.Current.Val], *v.Current.Weight, min)
 			}
 
 			v.Current = v.Current.Next
 		}
 		min = heap.ExtractMin()
-		mst[min.HeapLabel] = true
+		mstGraph.InsertVertex(min.HeapLabel)
+		mstGraph.InsertEdge(min.HeapLabel, min.Parent.HeapLabel, &min.AttCost)
 	}
+	fmt.Println("undirected weighted")
+	for i, v := range mstGraph.AdjList {
+		v.Current = v.Head
 
-	for k, v := range mst {
-		if v {
-			index := graph.Dict[k]
-			parent := graph.AdjList[index].Parent
-			if parent != nil {
-				fmt.Print(parent.HeapLabel, ": ")
-			} else {
-				fmt.Print("П: ")
-			}
-			fmt.Print(k)
+		for v.Current != nil {
+			fmt.Print(graph.Idict[i], "=")
+			fmt.Print(graph.Idict[v.Current.Val], "=")
+			fmt.Println(*v.Current.Weight)
+			v.Current = v.Current.Next
 		}
-		fmt.Println()
 	}
-
 }

@@ -35,11 +35,11 @@ type Node struct {
 	Label     string
 	Prev      *Node
 	Next      *Node
+	Parent    *Node
 }
 
 //List tail, current and head of doubly linked list. An array of Lists will serve as the adjacency list. Use a map[string]int to map the vertices to the array
 type List struct {
-	Parent  *Node
 	Tail    *Node
 	Head    *Node
 	Current *Node
@@ -58,7 +58,7 @@ func (g *Graph) InsertVertex(v string) {
 	e := g.VertCount - 1 //because of zero-based indexing
 	g.Dict[v] = e
 	g.Idict[e] = v
-	g.AdjList = append(g.AdjList, List{nil, nil, nil, nil})
+	g.AdjList = append(g.AdjList, List{nil, nil, nil})
 }
 
 //InsertEdge inserts two vertices as an edge into graph. If the graph is directed then v1 is the head and v2 is the tail i.e v1->v2
@@ -69,7 +69,7 @@ func (g *Graph) InsertEdge(v1 string, v2 string, weight *float64) {
 		e1 = g.VertCount - 1 //because of zero-based indexing
 		g.Dict[v1] = e1
 		g.Idict[e1] = v1
-		g.AdjList = append(g.AdjList, List{nil, nil, nil, nil})
+		g.AdjList = append(g.AdjList, List{nil, nil, nil})
 	}
 
 	e2, ok2 := g.Dict[v2]
@@ -78,7 +78,7 @@ func (g *Graph) InsertEdge(v1 string, v2 string, weight *float64) {
 		e2 = g.VertCount - 1 //because of zero-based indexing
 		g.Dict[v2] = e2
 		g.Idict[e2] = v2
-		g.AdjList = append(g.AdjList, List{nil, nil, nil, nil})
+		g.AdjList = append(g.AdjList, List{nil, nil, nil})
 	}
 
 	//Insert verteces into adjacency list
