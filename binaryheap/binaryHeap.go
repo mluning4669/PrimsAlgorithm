@@ -64,7 +64,6 @@ func (h *Heap) ChangeKey(currentLabel string, newKey float64) {
 	currentIndex := h.Dict[currentLabel]
 	h.Arr[currentIndex].AttCost = newKey
 	h.heapifyUp(currentIndex)
-	h.heapifyDown(currentIndex)
 }
 
 func (h *Heap) swap(i int, j int) {
