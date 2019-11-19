@@ -9,7 +9,7 @@ import (
 
 func main() {
 	fmt.Println("Prim's Algorithm")
-	graph := graphs.ReadFile("Prim_000.gl")
+	graph := graphs.ReadFile("Prim_002.gl")
 
 	graphs.PrintGraph(graph)
 
@@ -41,8 +41,7 @@ func prim(graph *graphs.Graph) {
 			break
 		}
 		var min = heap.ExtractMin()
-		mst[graph.Idict[min.Val-1]] = true
-		fmt.Print(graph.Idict[min.Val-1], ": ")
+		mst[min.HeapLabel] = true //min.Val will be one more than what it should be in the graph so subtracting 1 to compensate
 
 		v.Current = v.Head
 
@@ -54,12 +53,24 @@ func prim(graph *graphs.Graph) {
 			if *v.Current.Weight < heapAtIndex.AttCost && !e {
 				heap.ChangeKey(graph.Idict[v.Current.Val], *v.Current.Weight)
 				graph.AdjList[v.Current.Val].Parent = min
-				fmt.Print(" ", graph.Idict[v.Current.Val])
 			}
 
 			v.Current = v.Current.Next
 		}
-		fmt.Println()
+		for k, v := range mst {
+			if v {
+				index := graph.Dict[k]
+				parent := graph.AdjList[index].Parent
+				if parent != nil {
+					fmt.Print(parent.HeapLabel, ": ")
+				} else {
+					fmt.Print("П: ")
+				}
+				fmt.Print(k)
+			}
+			fmt.Println()
+		}
+		fmt.Println("BREAK")
 	}
 
 }
