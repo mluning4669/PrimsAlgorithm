@@ -9,17 +9,38 @@ import (
 
 func main() {
 	fmt.Println("Prim's Algorithm")
-	graph := graphs.ReadFile("Prim_000.gl")
+	graph := graphs.ReadFile("Prim_002.gl")
 
 	graphs.PrintGraph(graph)
 
 	fmt.Println()
 
-	prim(graph)
+	mst := prim(graph)
 
+	graphToFile(mst)
 }
 
-func prim(graph *graphs.Graph) {
+func graphToFile(graph *graphs.Graph) {
+	vertDict := make(map[string]bool)
+
+	fmt.Println("undirected weighted")
+	for i, v := range graph.AdjList {
+		v.Current = v.Head
+
+		for v.Current != nil {
+			if !vertDict[graph.Idict[v.Current.Val]] {
+				fmt.Print(graph.Idict[i], "=")
+				fmt.Print(graph.Idict[v.Current.Val], "=")
+				fmt.Println(*v.Current.Weight)
+			}
+			v.Current = v.Current.Next
+		}
+
+		vertDict[graph.Idict[i]] = true
+	}
+}
+
+func prim(graph *graphs.Graph) *graphs.Graph {
 	heap := binaryheap.StartHeap(graph.VertCount)
 	mstGraph := *graphs.NewGraph(false, true)
 
@@ -58,15 +79,6 @@ func prim(graph *graphs.Graph) {
 		mstGraph.InsertVertex(min.HeapLabel)
 		mstGraph.InsertEdge(min.HeapLabel, min.Parent.HeapLabel, &min.AttCost)
 	}
-	fmt.Println("undirected weighted")
-	for i, v := range mstGraph.AdjList {
-		v.Current = v.Head
 
-		for v.Current != nil {
-			fmt.Print(graph.Idict[i], "=")
-			fmt.Print(graph.Idict[v.Current.Val], "=")
-			fmt.Println(*v.Current.Weight)
-			v.Current = v.Current.Next
-		}
-	}
+	return &mstGraph
 }
