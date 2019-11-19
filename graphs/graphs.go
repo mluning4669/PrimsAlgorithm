@@ -9,7 +9,7 @@ import (
 
 //Graph an adjacency list with an associated map to map vertex names to indeces in adjlist
 type Graph struct {
-	dict      map[string]int
+	Dict      map[string]int
 	Idict     map[int]string //inverse of dict
 	AdjList   []List
 	VertCount int
@@ -20,7 +20,7 @@ type Graph struct {
 //NewGraph a constructor for type Graph
 func NewGraph(directed bool, weighted bool) *Graph {
 	g := Graph{directed: directed, VertCount: 0, weighted: weighted}
-	g.dict = make(map[string]int)
+	g.Dict = make(map[string]int)
 	g.Idict = make(map[int]string)
 	g.AdjList = make([]List, 0)
 	return &g
@@ -49,34 +49,34 @@ type List struct {
 
 //InsertVertex inserts a vertex with no neigbors. If v is found to exist in the Graph's dictionary then it already exists so return
 func (g *Graph) InsertVertex(v string) {
-	_, ok := g.dict[v]
+	_, ok := g.Dict[v]
 	if ok {
 		return
 	}
 	//if v is not in the graph dictionary then add it to the adjacency list
 	g.VertCount++
 	e := g.VertCount - 1 //because of zero-based indexing
-	g.dict[v] = e
+	g.Dict[v] = e
 	g.Idict[e] = v
 	g.AdjList = append(g.AdjList, List{nil, nil, nil, nil})
 }
 
 //InsertEdge inserts two vertices as an edge into graph. If the graph is directed then v1 is the head and v2 is the tail i.e v1->v2
 func (g *Graph) InsertEdge(v1 string, v2 string, weight *float64) {
-	e1, ok1 := g.dict[v1]
+	e1, ok1 := g.Dict[v1]
 	if !ok1 {
 		g.VertCount++
 		e1 = g.VertCount - 1 //because of zero-based indexing
-		g.dict[v1] = e1
+		g.Dict[v1] = e1
 		g.Idict[e1] = v1
 		g.AdjList = append(g.AdjList, List{nil, nil, nil, nil})
 	}
 
-	e2, ok2 := g.dict[v2]
+	e2, ok2 := g.Dict[v2]
 	if !ok2 {
 		g.VertCount++
 		e2 = g.VertCount - 1 //because of zero-based indexing
-		g.dict[v2] = e2
+		g.Dict[v2] = e2
 		g.Idict[e2] = v2
 		g.AdjList = append(g.AdjList, List{nil, nil, nil, nil})
 	}
