@@ -26,6 +26,7 @@ func StartHeap(n int) *Heap {
 func (h *Heap) ExtractMin() *graphs.Node {
 	min := h.Arr[1]
 	h.Arr[1] = h.Arr[h.Size]
+	h.Dict[h.Arr[1].HeapLabel] = 1
 	h.Arr[h.Size] = nil
 	h.heapifyDown(1)
 	h.Size--

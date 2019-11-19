@@ -9,7 +9,7 @@ import (
 
 func main() {
 	fmt.Println("Prim's Algorithm")
-	graph := graphs.ReadFile("Prim_002.gl")
+	graph := graphs.ReadFile("Prim_001.gl")
 
 	graphs.PrintGraph(graph)
 
@@ -36,41 +36,41 @@ func prim(graph *graphs.Graph) {
 		heap.Insert(newNode)
 	}
 
-	for _, v := range graph.AdjList { //going to break out of the loop if heap size drops to zero. This is more convenient for traversing the original graph
-		if heap.Size == 0 {
-			break
-		}
-		var min = heap.ExtractMin()
-		mst[min.HeapLabel] = true //min.Val will be one more than what it should be in the graph so subtracting 1 to compensate
+	var min = heap.ExtractMin()
+	mst[min.HeapLabel] = true
+
+	for heap.Size > 0 {
+		var v = graph.AdjList[graph.Dict[min.HeapLabel]]
 
 		v.Current = v.Head
 
-		for v.Current != nil {
+		for v.Current != nil { //
 			index := heap.Dict[graph.Idict[v.Current.Val]]
 			e := mst[graph.Idict[v.Current.Val]] //don't want to change the attachment costs of nodes already in the MST
-			heapAtIndex := heap.Arr[index]
 
-			if *v.Current.Weight < heapAtIndex.AttCost && !e {
+			if *v.Current.Weight < heap.Arr[index].AttCost && !e {
 				heap.ChangeKey(graph.Idict[v.Current.Val], *v.Current.Weight)
 				graph.AdjList[v.Current.Val].Parent = min
 			}
 
 			v.Current = v.Current.Next
 		}
-		for k, v := range mst {
-			if v {
-				index := graph.Dict[k]
-				parent := graph.AdjList[index].Parent
-				if parent != nil {
-					fmt.Print(parent.HeapLabel, ": ")
-				} else {
-					fmt.Print("П: ")
-				}
-				fmt.Print(k)
+		min = heap.ExtractMin()
+		mst[min.HeapLabel] = true
+	}
+
+	for k, v := range mst {
+		if v {
+			index := graph.Dict[k]
+			parent := graph.AdjList[index].Parent
+			if parent != nil {
+				fmt.Print(parent.HeapLabel, ": ")
+			} else {
+				fmt.Print("П: ")
 			}
-			fmt.Println()
+			fmt.Print(k)
 		}
-		fmt.Println("BREAK")
+		fmt.Println()
 	}
 
 }
