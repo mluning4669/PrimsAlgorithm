@@ -5,6 +5,7 @@ import (
 	"PrimsAlgorithm/graphs"
 	"fmt"
 	"math"
+	"os"
 )
 
 func main() {
@@ -17,27 +18,40 @@ func main() {
 
 	mst := prim(graph)
 
-	graphToFile(mst)
+	mstGraphToFile(mst)
 }
 
-func graphToFile(graph *graphs.Graph) {
+func mstGraphToFile(graph *graphs.Graph) {
+	f, err := os.Create("mst.gl")
+	if err != nil {
+		fmt.Println(err)
+		f.Close()
+		return
+	}
+
 	vertDict := make(map[string]bool)
 
-	fmt.Println("undirected weighted")
+	fmt.Fprintln(f, "undirected weighted")
 	for i, v := range graph.AdjList {
 		v.Current = v.Head
 
 		for v.Current != nil {
 			if !vertDict[graph.Idict[v.Current.Val]] {
-				fmt.Print(graph.Idict[i], "=")
-				fmt.Print(graph.Idict[v.Current.Val], "=")
-				fmt.Println(*v.Current.Weight)
+				fmt.Fprint(f, graph.Idict[i], "=")
+				fmt.Fprint(f, graph.Idict[v.Current.Val], "=")
+				fmt.Fprintln(f, *v.Current.Weight)
 			}
 			v.Current = v.Current.Next
 		}
 
 		vertDict[graph.Idict[i]] = true
 	}
+	err = f.Close()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("file written successfully")
 }
 
 func prim(graph *graphs.Graph) *graphs.Graph {
