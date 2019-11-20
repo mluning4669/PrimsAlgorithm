@@ -10,11 +10,7 @@ import (
 
 func main() {
 	fmt.Println("Prim's Algorithm")
-	graph := graphs.ReadFile("Prim_002.gl")
-
-	graphs.PrintGraph(graph)
-
-	fmt.Println()
+	graph := graphs.ReadFile("Prim_001.gl")
 
 	mst := prim(graph)
 
@@ -81,7 +77,7 @@ func prim(graph *graphs.Graph) *graphs.Graph {
 
 		for v.Current != nil { //
 			index := heap.Dict[graph.Idict[v.Current.Val]]
-			_, e := mstGraph.Idict[v.Current.Val] //don't want to change the attachment costs of nodes already in the MST
+			_, e := mstGraph.Dict[graph.Idict[v.Current.Val]] //don't want to change the attachment costs of nodes already in the MST
 
 			if *v.Current.Weight < heap.Arr[index].AttCost && !e {
 				heap.ChangeKey(graph.Idict[v.Current.Val], *v.Current.Weight, min)
@@ -91,7 +87,7 @@ func prim(graph *graphs.Graph) *graphs.Graph {
 		}
 		min = heap.ExtractMin()
 		mstGraph.InsertVertex(min.HeapLabel)
-		mstGraph.InsertEdge(min.HeapLabel, min.Parent.HeapLabel, &min.AttCost)
+		mstGraph.InsertEdge(min.Parent.HeapLabel, min.HeapLabel, &min.AttCost)
 	}
 
 	return &mstGraph
